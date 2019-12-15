@@ -1,4 +1,4 @@
-var canvas = document.getElementById("myCanvas");
+var canvas = document.getElementById("back");
 canvas_width = canvas.width;
 canvas_height = canvas.height;
 var context = canvas.getContext("2d");
@@ -79,24 +79,22 @@ function startGame() {
 }
 
 function initItems(items) {
-  sea = new Item("resources/sea.png", 0, canvas_height * 0.75, 0, 0, 0);
+  sea = new Item("resources/sea.png", 0, canvas_height * 0.78, 0, 0);
   items.push(sea);
-  boat = new Boat("resources/boat.png", 400, 340, 210, 150, 5);
+  boat = new Boat("resources/boat.png", 400, canvas_height * 0.6, 210, 5);
   items.push(boat);
-  plane = new Plane("resources/plane.png", canvas.width - 150, 15, 100, 0, 1);
+  plane = new Plane("resources/plane.png", canvas.width - 150, 15, 100, 1);
   items.push(plane);
   return items;
 }
 
 function createParachut(list) {
-  console.log("Hey" + new Date());
   list.push(
     new Parachut(
       "resources/parachutist.png",
       plane.x,
       plane.y,
-      7,
-      150,
+      0,
       1.5,
       dropOrChatch.bind(null, list)
     )

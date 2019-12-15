@@ -14,7 +14,3 @@ canvas {
   background: url("resources/background.png");
   margin: 0 auto;
 }
-#output {
-  text-align: center;
-  margin-top: 30px;
-}
