@@ -1,16 +1,10 @@
 * {
-  padding: 0;
   margin: 0;
-  top: 50;
-  background-color: lightcyan;
-  min-width: 1000px; /* Suppose you want minimum width of 1000px */
-  width: auto !important; /* Firefox will set width as auto */
-  width: 1000px;
+  background-color: rgb(206, 253, 253);
 }
 canvas {
   display: block;
-  border: 1px solid #d3d3d3;
-  background-color: grey;
+  border: 1px solid lightblue;
   background: url("resources/background.png");
   margin: 0 auto;
 }

@@ -1,15 +1,16 @@
 var canvas = document.getElementById("back");
-canvas_width = canvas.width;
-canvas_height = canvas.height;
 var context = canvas.getContext("2d");
 let score;
 let lives;
 let lists;
 let refreshIntervalId;
-function drawItems({ itemsList, paraList, textScore, textLives }) {
+
+function drawItems(lists) {
+  ({ itemsList, paraList, textScore, textLives } = lists);
   context.clearRect(0, 0, canvas.width, canvas.height);
+  //Always display score
+  textScore.show(context, score);
   if (lives > 0) {
-    textScore.show(context, score);
     textLives.show(context, lives);
     paraList.forEach(parachut => {
       drawItem(parachut);
@@ -17,27 +18,28 @@ function drawItems({ itemsList, paraList, textScore, textLives }) {
     });
     itemsList.forEach(item => {
       drawItem(item);
-      item.move(canvas);
+      item.move(canvas.width);
     });
 
     requestAnimationFrame(drawItems.bind(null, lists));
   } else {
-    textScore.show(context, score);
     endGame();
   }
 }
+
 function drawItem({ img, x, y }) {
   context.drawImage(img, x, y);
 }
+//Move by arrows, when game over by pressing enter -> replay
 document.addEventListener("keydown", boatMove);
 function boatMove(e) {
   const key = e.key;
   switch (key) {
     case "ArrowLeft":
-      boat.move(canvas, -boat.speed);
+      boat.move(canvas.width, -boat.speed);
       break;
     case "ArrowRight":
-      boat.move(canvas, boat.speed);
+      boat.move(canvas.width, boat.speed);
       break;
     case "Enter":
       if (lives === 0) {
@@ -45,9 +47,9 @@ function boatMove(e) {
       }
   }
 }
+//end game clean up
 function endGame() {
   clearInterval(refreshIntervalId);
-  lists.paraList = [];
   lists = {};
   lives = 0;
   endText = new TextField("Game Over :(", 300, 200, "25px", "Consolas");
@@ -61,31 +63,33 @@ function endGame() {
   );
   replayText.show(context, "");
 }
-
+//start game
 function startGame() {
   lists = {};
   lives = 3;
   score = 0;
-  lists.itemsList = initItems([]);
+  lists = initItems({});
   lists.paraList = [];
-  lists.textScore = new TextField("SCORE: ", 20, 20, "20px", "Consolas");
-  lists.textLives = new TextField("LIVE: ", 20, 50, "20px", "Consolas");
   drawItems(lists);
+  //random plane drop
   refreshIntervalId = setInterval(
     createParachut,
-    Math.random() * 6000 + 1000,
+    Math.random() * 3000 + 2000,
     lists.paraList
   );
 }
 
-function initItems(items) {
-  sea = new Item("resources/sea.png", 0, canvas_height * 0.78, 0, 0);
-  items.push(sea);
-  boat = new Boat("resources/boat.png", 400, canvas_height * 0.6, 210, 5);
-  items.push(boat);
+function initItems(lists) {
+  lists.itemsList = [];
+  sea = new Item("resources/sea.png", 0, canvas.height * 0.78, 0, 0);
+  lists.itemsList.push(sea);
+  boat = new Boat("resources/boat.png", 400, canvas.height * 0.6, 210, 5);
+  lists.itemsList.push(boat);
   plane = new Plane("resources/plane.png", canvas.width - 150, 15, 100, 1);
-  items.push(plane);
-  return items;
+  lists.itemsList.push(plane);
+  lists.textScore = new TextField("SCORE: ", 20, 20, "20px", "Consolas");
+  lists.textLives = new TextField("LIVE: ", 20, 50, "20px", "Consolas");
+  return lists;
 }
 
 function createParachut(list) {
@@ -101,9 +105,11 @@ function createParachut(list) {
   );
 }
 
-function dropOrChatch(list, param) {
-  if (param) {
+function dropOrChatch(list, flag) {
+  //Catch
+  if (flag) {
     score += 10;
+    //Miss
   } else {
     lives--;
   }

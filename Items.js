@@ -14,12 +14,12 @@ class Boat extends Item {
   constructor(path, x, y, width, speed) {
     super(path, x, y, width, speed);
   }
-  move(canvas, speedWithDirection = 0) {
+  move(widthOfCanvas, speedWithDirection = 0) {
     this.x += speedWithDirection;
     if (this.x < 0) {
       this.x = 0;
-    } else if (this.x > canvas.width - this.width) {
-      this.x = canvas.width - this.width;
+    } else if (this.x > widthOfCanvas - this.width) {
+      this.x = widthOfCanvas - this.width;
     }
   }
 }
@@ -28,11 +28,11 @@ class Plane extends Item {
     super(path, x, y, width, speed);
   }
 
-  move(canvas) {
+  move(widthOfCanvas) {
     //Plane goes from right to left
     this.x -= this.speed;
     if (this.x < 0) {
-      this.x = canvas.width - this.width;
+      this.x = widthOfCanvas - this.width;
     }
   }
 }
